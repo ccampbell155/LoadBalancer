@@ -1,29 +1,51 @@
 ﻿using System.Net;
 using System.Net.Sockets;
-using System.Text;
 
 namespace LoadBalancer
 {
     internal class Balancer
     {
-        private readonly TcpListener balancer;
-        public Balancer(string host, int port)
+        private readonly TcpListener balancerListener;
+        private readonly Backend backend;
+        public Balancer(string balancerHost, int balancerPort, Backend backend)
         {
-            balancer = new TcpListener(IPAddress.Parse(host), port);
+            balancerListener = new TcpListener(IPAddress.Parse(balancerHost), balancerPort);
+            this.backend = backend;
         }
         public async Task Start()
         {
-            balancer.Start();
-            Console.WriteLine("Load Balancer setup started");
+            balancerListener.Start();
+            Console.WriteLine($"Load Balancer is listening on {balancerListener.LocalEndpoint}");
 
             while (true)
             {
-                using var client = await balancer.AcceptTcpClientAsync();
-                await using var stream = client.GetStream();
-                var message = Encoding.UTF8.GetBytes("Load Balancer Running");
-                await stream.WriteAsync(message, 0, message.Length);
-                await stream.FlushAsync();
+                var client = await balancerListener.AcceptTcpClientAsync();
+                _ = HandleConnection(client);
             }
         }
+
+        private async Task HandleConnection(TcpClient incomingClient)
+        {
+            using (incomingClient)
+            {
+                try
+                {
+                    using var backendConnection = new TcpClient();
+                    await backendConnection.ConnectAsync(backend.Host, backend.Port);
+
+                    using var clientStream = incomingClient.GetStream();
+                    using var backendStream = backendConnection.GetStream();
+
+                    var clientToBackend = clientStream.CopyToAsync(backendStream);
+                    var backendToClient = backendStream.CopyToAsync(clientStream);
+
+                    await Task.WhenAny(clientToBackend, backendToClient);
+                }
+                catch (Exception ex) {
+                    Console.WriteLine($"Error: { ex.Message}");
+                }
+            }
+        }
+
     }
 }

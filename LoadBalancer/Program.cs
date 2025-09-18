@@ -8,7 +8,7 @@ public class Program
     public Program(string backEndHost, int backEndport, string balancerHost, int balancerPort)
     {
         backend = new Backend(backEndHost, backEndport);
-        balancer = new Balancer(balancerHost, balancerPort);
+        balancer = new Balancer(balancerHost, balancerPort, backend);
     }
 
     public async Task Run()
