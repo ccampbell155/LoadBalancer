@@ -1,16 +1,7 @@
-﻿using System.Net;
-using System.Net.Security;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
-using LoadBalancer;
+﻿using LoadBalancer;
 
 public class Program
 {
-    private readonly string backendHost;
-    private readonly string balancerHost;
-    private readonly int backendPort;
-    private readonly int balancerPort;
     private readonly Backend backend;
     private readonly Balancer balancer;
 
