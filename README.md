@@ -8,6 +8,7 @@ Your task is to implement a basic, software-based load-balancer, operating at la
 - It can balance traffic across multiple backend services
 - It can remove a service from operation if it goes offline You may add other requirements as necessary / you feel appropriate. 
 - You may choose and language you are comfortable with. You should not use any cloud-services in the completion of this exercise.
+- 72hour deadline from email received (Wed 17/09/25 11.13am)
 
 ## Acceptance Criteria:
 
@@ -128,13 +129,17 @@ Backend 9002     9
 ```
 
 
-You can also stop one API in one of the Powershell instances (Ctrl + c), run the requests and will only see the up servers (both through Load Balncer as single requests or through distribution)
-There will also be a down server notification
+You can also stop one API (e.g. API1) in its Powershell instance (Ctrl + c), and then re-run the requests, which will only return the up servers (both through Load Balncer as single requests or through distribution). e.g.:
+```
+Backend 9003    16
+Backend 9002    14
+```
+There will also be a down server notification ```Server DOWN: 127.0.0.1:9001```
 
-You can then restart the stopped api; e.g. if you stopped API1, run:
+You can then restart the stopped API
 ```
 dotnet run --project Api1 --urls http://127.0.0.1:9001
 ```
- and you will get a message saying re-added, and will see re-added server both through Load Balncer as single requests or through distribution
+ and you will get a message saying ```Re-added 127.0.0.1:9001```, and will see re-added server both through Load Balancer as single requests or through distribution
 
 
