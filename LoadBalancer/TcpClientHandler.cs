@@ -19,7 +19,7 @@ namespace LoadBalancer
                     using var backendTcpClient = new TcpClient();
 
                     var connectTask = backendTcpClient.ConnectAsync(chosenServer.host, chosenServer.port);
-                    var completedTask = await Task.WhenAny(connectTask, Task.Delay(800));
+                    var completedTask = await Task.WhenAny(connectTask, Task.Delay(500));
                     if (completedTask != connectTask)
                     {
                         if (chosenServer.up)

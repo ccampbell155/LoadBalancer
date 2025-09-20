@@ -16,12 +16,12 @@ namespace LoadBalancer
                     {
                         using var probe = new TcpClient();
                         var connectTask = probe.ConnectAsync(s.host, s.port);
-                        var done = await Task.WhenAny(connectTask, Task.Delay(800));
+                        var done = await Task.WhenAny(connectTask, Task.Delay(500));
                         if (done == connectTask)
                         {
                             try
                             {
-                                await connectTask; // confirm success
+                                await connectTask;
                                 s.up = true;
                                 Console.WriteLine($"Re-added {s.host}:{s.port}");
                             }
