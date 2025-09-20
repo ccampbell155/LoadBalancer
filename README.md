@@ -131,7 +131,7 @@ Backend 9002     9
 You can also stop one API in one of the Powershell instances (Ctrl + c), run the requests and will only see the up servers (both through Load Balncer as single requests or through distribution)
 There will also be a down server notification
 
-You can then restart the stopped api (e.g. if you stopped API1, run
+You can then restart the stopped api; e.g. if you stopped API1, run:
 ```
 dotnet run --project Api1 --urls http://127.0.0.1:9001
 ```
